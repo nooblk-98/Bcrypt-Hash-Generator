@@ -36,7 +36,7 @@ export default function Header() {
            
             <li>
               <a
-                href="https://github.com"
+                href="https://github.com/faseemnaufal/Bcrypt-Hash-Generator"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium

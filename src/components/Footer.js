@@ -30,7 +30,7 @@ export default function Footer() {
               
               <li>
                 <a
-                  href="https://github.com"
+                  href="https://github.com/faseemnaufal/Bcrypt-Hash-Generator"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-500 hover:text-blue-600 transition-colors font-medium"
