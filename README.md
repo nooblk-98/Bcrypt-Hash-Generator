@@ -88,6 +88,20 @@ npm start
 
 ---
 
+## 🐳 Docker
+
+```bash
+# Build the image
+docker build -t bcrypt-generator .
+
+# Run the container
+docker run --rm -p 3000:3000 bcrypt-generator
+```
+
+Then open [http://localhost:3000](http://localhost:3000).
+
+---
+
 ## 🌐 Deployment
 
 Deploy to [Vercel](https://vercel.com) with zero config:
