@@ -1,143 +1,138 @@
-# Bcrypt Generator — Online Hash Generator & Checker
+# Bcrypt Hash Generator & Verifier
 
-A free, fast, and privacy-first **online bcrypt hash generator and password verifier** built with **Next.js 15+**, **Tailwind CSS v4**, and **bcryptjs**.
+[![Release](https://img.shields.io/github/v/release/nooblk-98/Bcrypt-Hash-Generator?label=release)](https://github.com/nooblk-98/Bcrypt-Hash-Generator/releases)
+[![Build](https://img.shields.io/github/actions/workflow/status/nooblk-98/Bcrypt-Hash-Generator/release-and-publish.yml?label=build)](https://github.com/nooblk-98/Bcrypt-Hash-Generator/actions/workflows/release-and-publish.yml)
+[![Container](https://img.shields.io/badge/ghcr.io-bcrypt--hash--generator-2496ED?logo=docker&logoColor=white)](https://github.com/nooblk-98/Bcrypt-Hash-Generator/pkgs/container/bcrypt-hash-generator)
+[![License](https://img.shields.io/github/license/nooblk-98/Bcrypt-Hash-Generator)](./LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D20.9-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 
-Everything runs 100% in your browser — no passwords or hashes are ever sent to a server.
+Generate and verify bcrypt password hashes in the browser — with a tunable cost factor, live password strength feedback, and hash introspection. Nothing leaves the page.
 
----
+Built with **Next.js 16** (App Router, React 19), **Tailwind CSS v4**, and **bcryptjs**.
 
-## ✨ Features
+> [!NOTE]
+> All hashing and verification run client-side via `bcryptjs`. There is no API route, no database, and no telemetry — passwords are never transmitted anywhere, even when the app is self-hosted.
 
-| Feature | Details |
-|---|---|
-| **Generate Bcrypt Hash** | Customizable cost factor (rounds 4–15), show/hide password |
-| **Verify Password** | Compare plain text against any bcrypt hash |
-| **Password Strength Meter** | Live indicator: Very Weak → Very Strong |
-| **Hash Information** | Parsed version, rounds, salt, and length |
-| **Hash History** | Last 10 hashes stored in `localStorage` |
-| **Toast Notifications** | Instant feedback for copy/generate/verify/delete |
-| **FAQ Section** | Accessible accordion answering common bcrypt questions |
-| **SEO Ready** | Full metadata, Open Graph, sitemap.xml, robots.txt |
+## Features
 
----
+- **Hash generation** with a selectable cost factor from 4 to 15 (default 10)
+- **Password verification** — compare any plain-text password against an existing bcrypt hash
+- **Live strength meter** scoring length and character variety across five tiers, from Very Weak to Very Strong
+- **Hash introspection** — parses the algorithm version, cost factor, salt, and digest out of a hash string
+- **Local history** of the last 10 generated hashes, with per-entry copy and delete
+- **Toast notifications** for every generate, verify, copy, and delete action
+- **Accessible by default** — semantic landmarks, ARIA live regions, full keyboard navigation, and a native `<details>` FAQ that works without JavaScript
+- **SEO ready** — Open Graph and Twitter metadata, plus generated `/sitemap.xml` and `/robots.txt`
 
-## 🚀 Getting Started
+## Quick start
+
+Requires [Node.js](https://nodejs.org) 20.9 or later.
 
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Start development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
----
+Other scripts:
 
-## 🏗 Project Structure
+| Script | Description |
+|---|---|
+| `npm run dev` | Start the development server with hot reload |
+| `npm run build` | Produce a production build |
+| `npm start` | Serve the production build |
+| `npm run lint` | Lint with `eslint-config-next` core-web-vitals rules |
 
-```
-bcrypt-generator/
-├── src/
-│   ├── app/
-│   │   ├── layout.js          # Root layout — metadata, Inter font, ToastProvider
-│   │   ├── page.js            # Home page (hero + all sections)
-│   │   ├── globals.css        # Tailwind v4 + custom animations
-│   │   ├── sitemap.js         # Auto-generates /sitemap.xml
-│   │   └── robots.js          # Auto-generates /robots.txt
-│   │
-│   ├── components/
-│   │   ├── Header.js          # Sticky glassmorphism header
-│   │   ├── Footer.js          # Footer with links
-│   │   ├── Generator.js       # Bcrypt hash generation card
-│   │   ├── Verifier.js        # Password verification card
-│   │   ├── StrengthMeter.js   # Live password strength bar
-│   │   ├── HashInfo.js        # Parsed hash metadata panel
-│   │   ├── History.js         # localStorage hash history
-│   │   ├── Toast.js           # Global toast notification system
-│   │   └── FAQ.js             # Accordion FAQ (native details/summary)
-│   │
-│   └── utils/
-│       ├── bcrypt.js           # generateHash / verifyHash wrappers
-│       ├── hashInfo.js         # Bcrypt hash string parser
-│       ├── passwordStrength.js # Strength score calculator
-│       └── storage.js          # localStorage helpers
-│
-├── package.json
-└── README.md
-```
+## Run with Docker
 
----
-
-## 🔧 Tech Stack
-
-- **[Next.js 16](https://nextjs.org/)** — App Router, React 19
-- **[Tailwind CSS v4](https://tailwindcss.com/)** — `@import "tailwindcss"` syntax
-- **[bcryptjs](https://github.com/dcodeIO/bcrypt.js)** — Pure JS bcrypt (no native bindings needed)
-- **[Google Fonts — Inter](https://fonts.google.com/specimen/Inter)** — Via `next/font/google`
-
----
-
-## 📦 Production Build
+Pull the published multi-arch image (`linux/amd64` and `linux/arm64`):
 
 ```bash
-npm run build
-npm start
+docker run --rm -p 3000:3000 ghcr.io/nooblk-98/bcrypt-hash-generator:latest
 ```
 
----
-
-## 🐳 Docker
+Or build it locally:
 
 ```bash
-# Build the image
 docker build -t bcrypt-generator .
-
-# Run the container
 docker run --rm -p 3000:3000 bcrypt-generator
 ```
 
-Then open [http://localhost:3000](http://localhost:3000).
+The [Dockerfile](./Dockerfile) is a three-stage build. Dependencies install from the lockfile in their own layer, the app compiles to a Next.js [standalone](https://nextjs.org/docs/app/api-reference/config/next-config-js/output) bundle, and the runtime stage ships only `server.js`, the static assets, and a pruned `node_modules` on Alpine as a non-root user.
 
----
+| Variable | Default | Description |
+|---|---|---|
+| `PORT` | `3000` | Port the server listens on |
+| `HOSTNAME` | `0.0.0.0` | Bind address |
+| `NODE_ENV` | `production` | Next.js runtime mode |
 
-## 🌐 Deployment
+Pin the base image with `--build-arg NODE_VERSION=22-alpine` if you need a different Node release.
 
-Deploy to [Vercel](https://vercel.com) with zero config:
+## How it works
+
+The entire tool is four small modules in [src/utils/](src/utils/), each doing one job:
+
+- [bcrypt.js](src/utils/bcrypt.js) — thin async wrappers over `bcrypt.genSalt`, `bcrypt.hash`, and `bcrypt.compare`
+- [hashInfo.js](src/utils/hashInfo.js) — regex-parses the `$<version>$<rounds>$<22-char salt><31-char digest>` structure of a 60-character bcrypt hash
+- [passwordStrength.js](src/utils/passwordStrength.js) — scores a password on length thresholds (8, 12, 16) plus uppercase, lowercase, digit, and symbol classes
+- [storage.js](src/utils/storage.js) — `localStorage` helpers that keep history capped at 10 entries
+
+> [!TIP]
+> Cost factor 10 hashes in roughly 100 ms and is a reasonable default for web applications. Each increment doubles the work — pick the highest value your login latency budget tolerates.
+
+> [!WARNING]
+> Hash history is stored unencrypted in your browser's `localStorage` under the `bcrypt_history` key. Clear it before handing off a shared machine.
+
+## Project structure
+
+```
+├── src/
+│   ├── app/
+│   │   ├── layout.js          # Root layout — metadata, Inter font, ToastProvider
+│   │   ├── page.js            # Home page: hero, generator, verifier, history, FAQ
+│   │   ├── globals.css        # Tailwind v4 import + custom animations
+│   │   ├── sitemap.js         # Generates /sitemap.xml
+│   │   └── robots.js          # Generates /robots.txt
+│   ├── components/
+│   │   ├── Header.js          # Sticky glassmorphism header
+│   │   ├── Footer.js          # Footer with links
+│   │   ├── Generator.js       # Hash generation card
+│   │   ├── Verifier.js        # Password verification card
+│   │   ├── StrengthMeter.js   # Live strength bar
+│   │   ├── HashInfo.js        # Parsed hash metadata panel
+│   │   ├── History.js         # localStorage hash history
+│   │   ├── Toast.js           # Toast provider and useToast hook
+│   │   └── FAQ.js             # Accordion FAQ (native details/summary)
+│   └── utils/                 # bcrypt, hash parsing, strength, storage
+├── .github/workflows/
+│   └── release-and-publish.yml  # Tag, release, and push to GHCR
+├── Dockerfile
+└── next.config.mjs            # React Compiler + standalone output
+```
+
+Imports use the `@/*` alias mapped to `src/` (see [jsconfig.json](./jsconfig.json)).
+
+## Deployment
+
+Deploy to [Vercel](https://vercel.com) with zero configuration:
 
 ```bash
 npx vercel
 ```
 
-Or any platform supporting Next.js (Netlify, AWS Amplify, Render, Railway, etc.).
+The standalone Docker image also runs unchanged on any container host — Render, Railway, Fly.io, Cloud Run, or your own Kubernetes cluster.
 
-Before deploying, update the `baseUrl` in:
-- `src/app/sitemap.js`
-- `src/app/robots.js`
-- `src/app/layout.js` (alternates.canonical and openGraph.url)
+> [!IMPORTANT]
+> The canonical URL is still the `https://bcrypt-generator.example.com` placeholder. Replace it in [src/app/layout.js](src/app/layout.js) (`alternates.canonical` and `openGraph.url`), [src/app/sitemap.js](src/app/sitemap.js), and [src/app/robots.js](src/app/robots.js) before going live, or search engines will index the wrong host.
 
----
+## Releases
 
-## 🔒 Privacy
+Publishing a GitHub release builds and pushes the image to GHCR, tagged `x.y.z`, `x.y`, `x`, and `latest`. Alternatively, dispatch the **Release and Publish** workflow with a `patch`, `minor`, or `major` bump: it derives the next semver tag from the existing tag list, creates the tag and release for you, then publishes the image. Prereleases are published without moving the `latest` tag.
 
-- **No server-side password processing** — bcryptjs runs entirely in the browser
-- **No analytics or tracking** — zero third-party scripts
-- **No account needed** — completely anonymous
-- **History is local** — stored only in your browser's `localStorage`
+## Tech stack
 
----
-
-## ♿ Accessibility
-
-- Semantic HTML5 elements (`<header>`, `<main>`, `<section>`, `<article>`, `<footer>`)
-- ARIA labels, `aria-live` regions, and `role` attributes
-- Keyboard navigation — all interactive elements focusable
-- Native `<details>/<summary>` FAQ — no JavaScript required
-- High color contrast throughout
-
----
-
-## 📄 License
-
-MIT License — free to use, modify, and distribute.
+- **[Next.js 16](https://nextjs.org/)** — App Router, React 19, React Compiler enabled
+- **[Tailwind CSS v4](https://tailwindcss.com/)** — configured through `@tailwindcss/postcss`
+- **[bcryptjs](https://github.com/dcodeIO/bcrypt.js)** — pure JavaScript bcrypt, no native bindings, so it runs in the browser and cross-compiles for arm64 without extra tooling
+- **[Inter](https://fonts.google.com/specimen/Inter)** — self-hosted via `next/font/google`
